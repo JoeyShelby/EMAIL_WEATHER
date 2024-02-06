@@ -1,5 +1,9 @@
 import json
+import time
+from datetime import datetime
+
 import requests
+from flask import current_app
 
 url = "https://restapi.amap.com/v3/weather/weatherInfo"
 params = {"key": "be34e4b95407d8210a923118e6084a8f",
@@ -13,13 +17,14 @@ def get_weather_info(city, extensions):
 
     response = requests.get(url, params)
     if response.status_code != 200:
+        current_app.logger.error('调用高德天气查询API失败！response.status_code != 200')
         return '调用高德天气查询API失败！'
 
     # 获得返回 JSON 数据
     weather_json = json.loads(response.text)
-    print(weather_json)
 
     if weather_json['status'] != '1':
+        current_app.logger.error("高德天气查询API返回数据异常: " + weather_json['info'])
         return "高德天气查询API返回数据异常: " + weather_json['info']
 
     return weather_json
