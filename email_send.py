@@ -7,9 +7,9 @@ import weather
 
 # 设置登录及服务器信息
 mail_host = 'smtp.163.com'
-mail_user = 'joeyshelby'
-mail_pass = 'AXUNLFDDYADWXICE'
-sender = 'joeyshelby@163.com'
+mail_user = 'xxxx'
+mail_pass = 'xxxx'
+sender = 'xxxxx@163.com'
 
 # 收件者邮箱文件
 receivers_file = "D:\CODE\Python\EMAIL_WEATHER\static\\receivers.txt"
