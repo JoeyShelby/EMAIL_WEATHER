@@ -6,7 +6,7 @@ import requests
 from flask import current_app
 
 url = "https://restapi.amap.com/v3/weather/weatherInfo"
-params = {"key": "be34e4b95407d8210a923118e6084a8f",
+params = {"key": "XXXX",
           "output": "JSON"}
 
 
