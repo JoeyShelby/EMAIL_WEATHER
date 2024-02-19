@@ -32,7 +32,9 @@ def trigger():
     # 添加定时任务，每10s打印日志
     scheduler.add_job(heartbeat, trigger='interval', seconds=10)
     # 添加定时任务，每日发送天气信息
-    scheduler.add_job(email_send.send_today_weather, trigger='cron', hour=23, minute=15)
+    # scheduler.add_job(email_send.send_today_weather, trigger='cron', hour=23, minute=15)
+    # 发邮件测试
+    scheduler.add_job(email_send.send_today_weather, args=[app], trigger='interval', seconds=10)
     # 添加定时任务，每日0点更新日志配置
     scheduler.add_job(update_logFile, trigger='cron', hour=0, minute=0)
 

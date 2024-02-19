@@ -7,15 +7,15 @@ import weather
 
 # 设置登录及服务器信息
 mail_host = 'smtp.163.com'
-mail_user = 'xxxx'
-mail_pass = 'xxxx'
-sender = 'xxxxx@163.com'
+mail_user = 'XXX'
+mail_pass = 'XXXX'
+sender = 'XXXX@163.com'
 
 # 收件者邮箱文件
 receivers_file = "D:\CODE\Python\EMAIL_WEATHER\static\\receivers.txt"
 
 
-def send_today_weather():
+def send_today_weather(app):
     # Open file
     fileHandler = open(receivers_file, "r")
     # Get list of all lines in file
@@ -49,10 +49,12 @@ def send_today_weather():
             smtpObj.sendmail(
                 sender, receiver, message.as_string())
             # 记录日志
-            current_app.logger.info(f'{receiver}:{weather_data_all}')
+            with app.app_context():
+                current_app.logger.info(f'{receiver}:{weather_data_all}')
         # 退出
         smtpObj.quit()
     except smtplib.SMTPException as e:
-        current_app.logger.error(f'邮件登录或发送过程出错{e}')
+        with app.app_context():
+            current_app.logger.error(f'邮件登录或发送过程出错{e}')
     # Close file
     fileHandler.close()
