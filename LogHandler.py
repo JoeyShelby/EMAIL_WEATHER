@@ -1,10 +1,11 @@
 import os
 import logging
 import time
+import config
 from logging.handlers import RotatingFileHandler
 
 # 日志保存路径
-log_dir_name = "D:" + os.sep+"logs"
+log_dir_name = config.log_dir_name
 
 
 def getLogHandler():

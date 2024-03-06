@@ -1,3 +1,4 @@
+# 实时天气数据
 class WeatherDataBase:
     def __init__(self, json_data):
         self.province = json_data['lives'][0]['province']

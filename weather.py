@@ -1,16 +1,13 @@
 import json
-import time
-from datetime import datetime
-
+import config
 import requests
 from flask import current_app
 
-url = "https://restapi.amap.com/v3/weather/weatherInfo"
-params = {"key": "be34e4b95407d8210a923118e6084a8f",
-          "output": "JSON"}
+url = config.url
+params = config.params
 
 
-# 调用高德天气查虚拟接口，获得天气数据 extensions(气象类型) 可选值：base/all base:返回实况天气 all:返回预报天气
+# 调用高德天气查询接口，获得天气数据 extensions(气象类型) 可选值：base/all base:返回实况天气 all:返回预报天气
 def get_weather_info(city, extensions):
     params['city'] = city
     params['extensions'] = extensions

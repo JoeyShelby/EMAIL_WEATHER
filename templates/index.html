@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email_Weather</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+          .weather-form {
+            text-align: center;
+        }
+
+        .weather-input {
+            padding: 10px;
+            margin: 10px;
+            width: 60%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .weather-submit {
+            padding: 10px 20px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+
+        .start-button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .start-button:hover {
+            background-color: #45a049;
+        }
+
+        .result {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Email_Weather</h1>
+        <form class="weather-form" id="weatherForm" action="http://127.0.0.1:5000/updateUser" method="post" onsubmit="return validateForm()">
+            <input type="text" class="weather-input" id="email" name="email" placeholder="请输入邮箱">
+            <input type="text" class="weather-input" id="city_code" name="city_code" placeholder="请输入地区">
+            <button type="submit" class="weather-submit">提交</button>
+        </form>
+        <div class="error-message" id="errorMessage"></div>
+
+        {% if can_trigger %}
+            <a href="http://127.0.0.1:5000/start">
+              <button type="button" class="start-button">启动服务</button>
+            </a>
+        {% else %}
+            <a href="http://127.0.0.1:5000/">
+              <button type="button" class="start-button" disabled="disabled">服务已启动</button>
+            </a>
+        {% endif %}
+
+        <div class="result">
+        {% if user %}
+            <p>{{ user }}</p>
+        {% else %}
+            <p> </p>
+        {% endif %}
+        </div>
+    </div>
+
+ <script>
+        function validateForm() {
+            var email = document.getElementById('email').value;
+            var city_code = document.getElementById('city_code').value;
+
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            var regionRegex = /^\d+$/;
+
+            if (!emailRegex.test(email)) {
+                document.getElementById('errorMessage').innerHTML = "请输入有效的邮箱地址";
+                return false;
+            }
+
+            if (!regionRegex.test(city_code)) {
+                document.getElementById('errorMessage').innerHTML = "地区只能输入数字";
+                return false;
+            }
+
+            // 校验通过，提交表单
+            return true;
+        }
+
+
+    </script>
+</body>
+</html>
