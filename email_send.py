@@ -24,7 +24,7 @@ def send_today_weather(app):
         smtpObj.connect(mail_host)
         # 登录到服务器
         smtpObj.login(mail_user, mail_pass)
-        # 循环读取receivers文件，发送邮件
+        # 给所有User发送邮件
         for user in users:
             # 获取天气信息
             weather_data_all = WeatherDataAll.WeatherDataAll(weather.get_weather_info(user.city_code, "all"))
@@ -45,6 +45,7 @@ def send_today_weather(app):
             # 记录日志
             with app.app_context():
                 current_app.logger.info(f'{user.email}:{weather_data_all}')
+                print(weather_data_all)
         # 退出
         smtpObj.quit()
     except smtplib.SMTPException as e:

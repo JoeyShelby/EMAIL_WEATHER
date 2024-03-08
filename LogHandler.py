@@ -19,7 +19,7 @@ def getLogHandler():
     file_log_handler = RotatingFileHandler(log_file_str, maxBytes=1024 * 1024, backupCount=10, encoding='UTF-8')
     # 设置日志的格式                   发生时间    日志等级     日志信息文件名      函数名          行数        日志信息
     formatter = logging.Formatter(
-        '%(asctime)s - %(levelname)s - %(filename)s - %(funcName)s - %(lineno)s - %(message)s')
+        '%(asctime)s - %(levelname)s - %(filename)s - %(funcName)s - %(lineno)s - %(message)s - <br>\n')
     # 将日志记录器指定日志的格式
     file_log_handler.setFormatter(formatter)
 

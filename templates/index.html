@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {# 省市区三级联动插件  #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='address.css') }}">
+    <script src="{{ url_for('static', filename='address.js')}}"></script>
     <title>Email_Weather</title>
     <style>
         body {
@@ -14,7 +17,7 @@
         }
 
         .container {
-            width: 80%;
+            width: 100%;
             margin: auto;
             overflow: hidden;
             padding: 20px;
@@ -25,19 +28,20 @@
             margin-bottom: 20px;
         }
 
-          .weather-form {
+        .user-form {
             text-align: center;
         }
 
-        .weather-input {
+        .user-input {
             padding: 10px;
             margin: 10px;
-            width: 60%;
+            width: 30%;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
 
-        .weather-submit {
+        .user-submit {
+            margin-top: 20px;
             padding: 10px 20px;
             border: none;
             background-color: #4CAF50;
@@ -46,18 +50,37 @@
             cursor: pointer;
         }
 
-
         .start-button {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
             padding: 10px 20px;
             border: none;
-            background-color: #4CAF50;
+            background-color: #45a040;
             color: white;
-            border-radius: 5px;
+            border-radius: 30px;
             cursor: pointer;
         }
 
         .start-button:hover {
-            background-color: #45a049;
+            background-color: #ee3f4d;
+        }
+
+
+        .stop-button {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            padding: 10px 20px;
+            border: none;
+            background-color: #ee3f4d;
+            color: white;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+
+        .stop-button:hover {
+            background-color: #45a040;
         }
 
         .result {
@@ -65,52 +88,110 @@
             text-align: center;
         }
 
+        .log-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 300px; /* 自定义宽度 */
+            height: 200px; /* 自定义高度 */
+            overflow: auto; /* 添加这行 */
+            border: 1px solid #ccc;
+            background-color: #fff;
+            padding: 10px;
+        }
+
+        .error-message {
+            color: #ee3f4d;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Email_Weather</h1>
-        <form class="weather-form" id="weatherForm" action="http://127.0.0.1:5000/updateUser" method="post" onsubmit="return validateForm()">
-            <input type="text" class="weather-input" id="email" name="email" placeholder="请输入邮箱">
-            <input type="text" class="weather-input" id="city_code" name="city_code" placeholder="请输入地区">
-            <button type="submit" class="weather-submit">提交</button>
+        <form class="user-form" id="weatherForm" action="/updateUser" method="post" onsubmit="return validateForm()">
+            <input type="text" class="user-input" id="email" name="email" placeholder="请输入邮箱">
+            {#  地址输入  #}
+          <div id="wrap"></div>
+            <input type="hidden" id="region" name="region">
+            <a class="error-message" id="errorMessage"></a>
+            <button type="submit" class="user-submit">提交</button>
         </form>
-        <div class="error-message" id="errorMessage"></div>
 
-        {% if can_trigger %}
-            <a href="http://127.0.0.1:5000/start">
-              <button type="button" class="start-button">启动服务</button>
-            </a>
-        {% else %}
-            <a href="http://127.0.0.1:5000/">
-              <button type="button" class="start-button" disabled="disabled">服务已启动</button>
-            </a>
-        {% endif %}
 
         <div class="result">
         {% if user %}
-            <p>{{ user }}</p>
+            <p>维护用户：{{ user }}</p>
         {% else %}
             <p> </p>
         {% endif %}
         </div>
+
+        <div class="log-container">
+            <p>日志：</p>
+           {% for log in logs %}
+           <a href="/log/{{ log }}" target="_blank">
+                <p>{{ log }}</p>
+           </a>
+           {% endfor %}
+        </div>
+
+
+      {% if can_trigger %}
+          <button type="button" onclick="switchService()" class="start-button">启动服务</button>
+      {% else %}
+          <button type="button" onclick="switchService()" class="stop-button">停止服务</button>
+      {% endif %}
+
     </div>
 
  <script>
+        {# 三级联动地址查询  #}
+        var address = new Address({
+            wrapId: 'wrap',
+            showArr: ['provinces','cities','areas'],
+            beforeCreat:function(){
+                console.log("beforeCreat")
+            },
+            afterCreat:function(){
+                console.log('afterCreat');
+            }
+        })
+
         function validateForm() {
-            var email = document.getElementById('email').value;
-            var city_code = document.getElementById('city_code').value;
-
-            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            var regionRegex = /^\d+$/;
-
-            if (!emailRegex.test(email)) {
-                document.getElementById('errorMessage').innerHTML = "请输入有效的邮箱地址";
+            {#获取省并校验#}
+            provinces=document.getElementById("provinces")
+            var provinceUl  = provinces.querySelector('.address-lists');
+            var provinceActiveLi = provinceUl.querySelector('li.active');
+            if(!provinceActiveLi){
+                document.getElementById('errorMessage').innerHTML = "请选择省份";
                 return false;
             }
+            var province = provinceActiveLi.textContent;
+            {#获取市并校验#}
+            cities=document.getElementById("cities")
+            var cityUl = cities.querySelector('.address-lists');
+            var cityActiveLi = cityUl.querySelector('li.active');
+            if(!cityActiveLi){
+                document.getElementById('errorMessage').innerHTML = "请选择市";
+                return false;
+            }
+            var city = cityActiveLi.textContent;
+            {#获取区县并校验#}
+            areas=document.getElementById("areas")
+            var areaUl = areas.querySelector('.address-lists');
+            var areaActiveLi = areaUl.querySelector('li.active');
+              if(!areaActiveLi){
+                document.getElementById('errorMessage').innerHTML = "请选择区/县";
+                return false;
+            }
+            var area = areaActiveLi.textContent;
 
-            if (!regionRegex.test(city_code)) {
-                document.getElementById('errorMessage').innerHTML = "地区只能输入数字";
+            document.getElementById('region').value = province + city + area;
+
+            var email = document.getElementById('email').value;
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                document.getElementById('errorMessage').innerHTML = "请输入有效的邮箱地址";
                 return false;
             }
 
@@ -118,7 +199,30 @@
             return true;
         }
 
-
+         // 启动或关闭服务校验
+          function switchService() {
+            // 使用window.prompt()弹出密码输入框
+            var password = window.prompt('输入密码（请谨慎操作！！！）');
+            // 如果密码不为空，发送POST请求
+            if (password !== null && password !== "") {
+                fetch('/switch', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'password=' + encodeURIComponent(password),
+                })
+                .then(response => {
+                    // 处理响应
+                    console.log(response);
+                    // 回到首页
+                    window.location.href = '/';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        }
     </script>
 </body>
 </html>
