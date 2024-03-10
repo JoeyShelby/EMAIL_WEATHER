@@ -10,16 +10,18 @@ class User(db.Model):
     city_desc = db.Column(db.String(100))
     nickname = db.Column(db.String(100))
     password = db.Column(db.String(13))
+    receive_time = db.Column(db.Time)
 
-    def __int__(self, handle, email, city_code, city_desc, nickname, password):
+    def __int__(self, handle, email, city_code, city_desc, nickname, password, receive_time):
         self.handle = handle
         self.email = email
         self.city_code = city_desc
         self.nickname = nickname
         self.password = password
+        self.receive_time = receive_time
 
     def __str__(self):
-        return f'User(handle={self.handle}, email={self.email}, city_code={self.city_code}, nickname={self.nickname}, password={self.password})'
+        return f'User(handle={self.handle}, email={self.email}, city_code={self.city_code}, nickname={self.nickname}, password={self.password}, receive_time={self.receive_time})'
 
 
 # 增
@@ -49,6 +51,15 @@ def get_user_by_email(email):
     return user
 
 
+# 查（按receive_time）
+def get_users_by_time(time):
+    # datetime.time(hour=7, minute=15, second=0)
+    users = User.query.filter_by(receive_time=time)
+    return users
+
+
 # 查（查所有）
 def get_all_users():
     return User.query.all()
+
+

@@ -66,7 +66,8 @@ def updateUser():
     log(f" app_updateUser()_email:{email},city_code:{city_code}")
     # 查到原User
     userOld = User.get_user_by_email(email)
-    userNew = User.User(handle=f'UserBO:{email},{city_code}', email=email, city_code=city_code, city_desc=region, nickname=email)
+    userNew = User.User(handle=f'UserBO:{email},{city_code}', email=email, city_code=city_code, city_desc=region,
+                        nickname=email)
     # 用户不存在，新建用户
     if not userOld:
         User.insert_user(userNew)
