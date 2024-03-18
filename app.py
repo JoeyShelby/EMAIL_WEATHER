@@ -62,7 +62,6 @@ def updateUser():
         log(f" app_updateUser()_维护失败 email:{email},city_code:{region}")
         return render_template('index.html', user="维护失败", can_trigger=can_trigger, logs=get_logs())
     city_code = city.get_adcode(region)
-    print(f'123456543564643245514311351{city_code}')
     log(f" app_updateUser()_email:{email},city_code:{city_code}")
     # 查到原User
     userOld = User.get_user_by_email(email)
@@ -108,8 +107,8 @@ def trigger(a):
         scheduler.add_job(update_logFile, trigger='cron', hour=0, minute=0)
         # 添加定时任务，每10s打印日志
         scheduler.add_job(log, args=[" HEARTBEAT"], trigger='interval', seconds=10)
-        # 添加定时任务，每日发送天气信息
-        scheduler.add_job(email_send.send_today_weather, args=[app], trigger='cron', hour=23, minute=15)
+        # 添加定时任务，每分钟执行一次【send_weather_by_time】
+        scheduler.add_job(email_send.send_to_user_on_time, args=[app], trigger='interval', minutes=1)
         # 测试用 每10s发送一次邮件 慎用
         # scheduler.add_job(email_send.send_today_weather, args=[app], trigger='interval', seconds=10)
         log(f" app_trigger(a)_启动定时任务")

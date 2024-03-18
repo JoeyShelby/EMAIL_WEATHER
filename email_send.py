@@ -1,4 +1,5 @@
 import smtplib
+from datetime import datetime
 from email.mime.text import MIMEText
 from flask import current_app
 import WeatherDataAll
@@ -41,7 +42,6 @@ def send_today_weather(app, user):
         # 记录日志
         with app.app_context():
             current_app.logger.info(f'{user.email}:{weather_data_all}')
-            print(weather_data_all)
         # 退出
         smtpObj.quit()
     except smtplib.SMTPException as e:
@@ -51,5 +51,12 @@ def send_today_weather(app, user):
 
 # 查找数据库中符合当前时间的用户，调用 send_today_weather 方法
 def send_to_user_on_time(app):
-    # 根据当前时间，查找出接收时间对应的User
-    print(123)
+    with app.app_context():
+        users = User.get_all_users()
+        current_app.logger.error(f'执行send_to_user_on_time(app)方法{users}')
+    for user in users:
+        current_time = datetime.now().time()  # 获取当前时间
+        receive_time = user.receive_time
+        # 比较当前时间的时和分是否与 receive_time 相等
+        if current_time.hour == receive_time.hour and current_time.minute == receive_time.minute:
+            send_today_weather(app, user)
