@@ -38,8 +38,8 @@ def hello_world():
 @app.route('/switch', methods=['POST'])
 def switch():
     password = request.form['password']
+    global can_trigger
     if password == config.ADMINPASSWORD:
-        global can_trigger
         if can_trigger:  # 开启定时任务
             can_trigger = False
             trigger(True)
@@ -58,15 +58,16 @@ def switch():
 def updateUser():
     email = request.form['email']
     region = request.form['region']
-    if not email or not region:
-        log(f" app_updateUser()_维护失败 email:{email},city_code:{region}")
+    receive_time = request.form['time']
+    if not email or not region or not receive_time:
+        log(f" app_updateUser()_维护失败 email:{email},city_code:{region}, receive_time:{receive_time}")
         return render_template('index.html', user="维护失败", can_trigger=can_trigger, logs=get_logs())
     city_code = city.get_adcode(region)
     log(f" app_updateUser()_email:{email},city_code:{city_code}")
     # 查到原User
     userOld = User.get_user_by_email(email)
     userNew = User.User(handle=f'UserBO:{email},{city_code}', email=email, city_code=city_code, city_desc=region,
-                        nickname=email)
+                        nickname=email, receive_time=receive_time)
     # 用户不存在，新建用户
     if not userOld:
         User.insert_user(userNew)
