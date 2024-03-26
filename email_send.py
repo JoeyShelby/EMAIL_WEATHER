@@ -17,9 +17,9 @@ sender = config.sender
 def send_today_weather(app, user):
     # 登录、获取天气数据、发送邮件
     try:
-        smtpObj = smtplib.SMTP(port=465)
         # 连接到服务器
-        smtpObj.connect(mail_host)
+        smtpObj = smtplib.SMTP_SSL(mail_host)
+        # smtpObj.connect(mail_host)
         # 登录到服务器
         smtpObj.login(mail_user, mail_pass)
         # 给该User发送邮件

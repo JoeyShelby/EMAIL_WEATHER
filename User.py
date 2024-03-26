@@ -21,7 +21,7 @@ class User(db.Model):
         self.receive_time = receive_time
 
     def __str__(self):
-        return f'User(handle={self.handle}, email={self.email}, city_code={self.city_code}, nickname={self.nickname}, password={self.password}, receive_time={self.receive_time})'
+        return f'User(handle={self.handle}, email={self.email}, city_code={self.city_code}, city_desc={self.city_desc}, nickname={self.nickname}, password={self.password}, receive_time={self.receive_time})'
 
 
 # 增
@@ -51,6 +51,11 @@ def get_user_by_email(email):
     return user
 
 
+def get_user_by_email_and_city(email, city_code):
+    user = User.query.filter_by(email=email, city_code=city_code).first()
+    return user
+
+
 # 查（按receive_time）
 def get_users_by_time(time):
     # datetime.time(hour=7, minute=15, second=0)
@@ -61,5 +66,3 @@ def get_users_by_time(time):
 # 查（查所有）
 def get_all_users():
     return User.query.all()
-
-

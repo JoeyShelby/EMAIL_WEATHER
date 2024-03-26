@@ -107,7 +107,7 @@ def trigger(a):
         # 添加定时任务，每日0点更新日志配置
         scheduler.add_job(update_logFile, trigger='cron', hour=0, minute=0)
         # 添加定时任务，每10s打印日志
-        scheduler.add_job(log, args=[" HEARTBEAT"], trigger='interval', seconds=10)
+        # scheduler.add_job(log, args=[" HEARTBEAT"], trigger='interval', seconds=10)
         # 添加定时任务，每分钟执行一次【send_weather_by_time】
         scheduler.add_job(email_send.send_to_user_on_time, args=[app], trigger='interval', minutes=1)
         # 测试用 每10s发送一次邮件 慎用
@@ -121,7 +121,7 @@ def trigger(a):
         return "已关闭定时任务"
 
 
-# 心跳日志
+# 日志
 def log(content):
     with app.app_context():
         current_app.logger.info(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())) + content)
@@ -139,4 +139,4 @@ def update_logFile():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')
