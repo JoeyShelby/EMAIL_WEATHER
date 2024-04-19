@@ -14,7 +14,7 @@ def get_weather_info(city, extensions):
 
     response = requests.get(url, params)
     if response.status_code != 200:
-        current_app.logger.error('调用高德查询API失败！response.status_code != 200')
+        current_app.logger.error('调用高德天气查询API失败！response.status_code != 200')
         return '调用高德天气查询API失败！'
 
     # 获得返回 JSON 数据
