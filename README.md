@@ -135,10 +135,10 @@ geoUrl = 'https://restapi.amap.com/v3/geocode/geo?parameters'
 `docker exec -it` 容器ID `/bin/bash` 进入到容器内，cd到 `/app` 目录下，运行`python app.py`命令
 
 # 预览
+![image](https://github.com/JoeyShelby/EMAIL_WEATHER/assets/57031953/51de1f1c-f49a-4191-bd2c-1191a8825097)
 
-![image-20240420120200071](../../source/images/EMAIL_WEATHER/image-20240420120200071.png)
+![image](https://github.com/JoeyShelby/EMAIL_WEATHER/assets/57031953/22d928a3-ac3e-4768-9238-5201fe077a78)
 
-![image-20240420120636678](../../source/images/EMAIL_WEATHER/image-20240420120636678.png)
 
 # 坑
 
