@@ -92,7 +92,7 @@ sender = 'XXXXXXXXXXXXX' # 发送邮箱
 # 高德天气API
 weatherUrl = "https://restapi.amap.com/v3/weather/weatherInfo"
 # api的key
-key = 'be34e4b95407d8210a923118e6084a8f'
+key = 'XXXXXXXXXXXXXXX'
 ```
 
 ##  地理编码API
